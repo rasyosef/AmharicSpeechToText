@@ -1,4 +1,5 @@
 from sklearn.preprocessing import LabelEncoder
+import numpy as np
 
 def fit_label_encoder(transcripts : dict) -> LabelEncoder:
   """
