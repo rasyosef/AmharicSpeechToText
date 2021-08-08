@@ -1,5 +1,7 @@
 import librosa
 import librosa.display
+import matplotlib.pyplot as plt
+
 class FeatureExtraction:
     def extract_features(self, audios : dict, sample_rate : int) -> dict:
         """
@@ -25,7 +27,7 @@ class FeatureExtraction:
             mfcc_features[audio] = librosa.feature.mfcc(audios[audio], sr=sample_rate)
         return mfcc_features
 
-    def save_mfcc_spectrograms(self, mfccs: dict, path: str) -> int:
+    def save_mfcc_spectrograms(self, mfccs: dict, sample_rate: int, path: str) -> int:
         """
         The Mel frequency cepstral coefficients (MFCCs) of a signal are a small set of 
         features (usually about 10–20) which concisely describe the overall shape of a 
@@ -39,7 +41,8 @@ class FeatureExtraction:
 
         Inputs: 
         mfccs - a python dictionary mapping the wav file names to the mfcc 
-                        coefficients of the sampled audio files
+                coefficients of the sampled audio files
+        sample_rate - the sampling rate for the audio
         path - the file path to the target directory
 
         Returns:
@@ -54,7 +57,7 @@ class FeatureExtraction:
             ax = plt.Axes(fig, [0., 0., 1., 1.])
             ax.set_axis_off()
             fig.add_axes(ax)
-            librosa.display.specshow(mfccs[audio], sr=44100, x_axis='time')
+            librosa.display.specshow(mfccs[audio], sr=sample_rate, x_axis='time')
             try:
                 plt.savefig(path+f'{audio}.png', dpi = 100)
             except FileNotFoundError:
