@@ -1,2 +1,4 @@
 /train_x.npy
 /train_y.npy
+/mel_train_x.npy
+/mel_train_y.npy

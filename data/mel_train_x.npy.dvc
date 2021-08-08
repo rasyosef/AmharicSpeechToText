@@ -1,0 +1,4 @@
+outs:
+- md5: fcd96dc6025be37d40db05c7183370ee
+  size: 311040128
+  path: mel_train_x.npy
