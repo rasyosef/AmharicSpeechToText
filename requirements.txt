@@ -8,3 +8,5 @@ streamlit
 librosa
 scipy
 python_speech_features
+tensorflow
+mlflow
