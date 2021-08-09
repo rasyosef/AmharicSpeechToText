@@ -38,16 +38,30 @@ def augment_audio(audios : dict, sample_rate : int) -> dict:
     audios[name] = np.roll(audios[name], int(sample_rate/10))
   return audios
 
-def equalize_transcript_dimension(y):
+# def equalize_transcript_dimension(y, truncate_len):
+#   """
+#   Make all transcripts have equal number of characters by padding the the short
+#   ones with spaces
+#   """
+#   max_len = max([len(trans) for trans in y])
+#   print("maximum number of characters in a transcript:", max_len)
+#   new_y = []
+#   for trans in y:
+#     new_y.append(np.pad(trans, 
+#                           (0, max_len-len(trans)),
+#                           mode = 'constant')[:truncate_len])
+#   return np.array(new_y)
+
+def equalize_transcript_dimension(encoded_transcripts, truncate_len):
   """
   Make all transcripts have equal number of characters by padding the the short
   ones with spaces
   """
-  max_len = max([len(trans) for trans in y])
+  max_len = max([len(encoded_transcripts[trans]) for trans in encoded_transcripts])
   print("maximum number of characters in a transcript:", max_len)
-  new_y = []
-  for trans in y:
-    new_y.append(np.pad(trans, 
-                          (0, max_len-len(trans)),
-                          mode = 'constant')[:20])
-  return np.array(new_y)
+  new_trans = {}
+  for trans in encoded_transcripts:
+    new_trans[trans] = np.pad(encoded_transcripts[trans], 
+                          (0, max_len-len(encoded_transcripts[trans])),
+                          mode = 'constant')[:truncate_len]
+  return new_trans

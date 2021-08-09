@@ -64,3 +64,43 @@ class FeatureExtraction:
                 raise FileNotFoundError(f'The directory {path} does not exist')
             fig.clear()
         return 0
+
+    def save_mel_spectrograms(self, audios: dict, sample_rate: int, path: str) -> int:
+        """
+        The Mel frequency cepstral coefficients (MFCCs) of a signal are a small set of 
+        features (usually about 10–20) which concisely describe the overall shape of a 
+        spectral envelope. It models the characteristics of the human voice.
+
+        A Spectrogram captures the nature of the audio as an image by decomposing 
+        it into the set of frequencies that are included in it.
+
+        We plot the MFCC spectrogram for each audio file, and save the plots as .png 
+        image files to the given target directory.
+
+        Inputs: 
+        mfccs - a python dictionary mapping the wav file names to the mfcc 
+                coefficients of the sampled audio files
+        sample_rate - the sampling rate for the audio
+        path - the file path to the target directory
+
+        Returns:
+        0 if the spectrograms were saved successfully, and 
+        raises a FileNotFoundError if the given path doesn't exist
+        """
+        if type(audios) != dict or type(path) != str:
+            raise TypeError("""argument mfccs must be of type dict and argument path
+                            must be of type string (str)""")
+        for audio in audios:
+            X = librosa.stft(audios[audio])
+            Xdb = librosa.amplitude_to_db(abs(X))
+            fig, ax = plt.subplots()
+            ax = plt.Axes(fig, [0., 0., 1., 1.])
+            ax.set_axis_off()
+            fig.add_axes(ax)
+            librosa.display.specshow(Xdb, sr=sample_rate, x_axis='time', y_axis='hz')
+            try:
+                plt.savefig(path+f'{audio}.png', dpi = 100)
+            except FileNotFoundError:
+                raise FileNotFoundError(f'The directory {path} does not exist')
+            fig.clear()
+        return 0

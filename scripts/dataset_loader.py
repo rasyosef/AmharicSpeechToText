@@ -78,4 +78,34 @@ def load_spectrograms_with_transcripts(mfcc_features : dict, encoded_transcripts
     specgram = image.imread(path+f'{audio}.png')
     X_train.append(specgram)
     y_train.append(encoded_transcripts[audio])
-  return np.array(X_train), y_train
+  return np.array(X_train), np.array(y_train)
+
+def load_spectrograms_with_transcripts_in_batches(mfcc_features : dict, encoded_transcripts : dict,
+                                                 batch_size : int, batch_no : int, path : str):
+  """
+  Loads the spectrogram images as numpy arrays
+
+  Inputs:
+  mfcc_features - a python dictionary mapping the wav file names to the mfcc 
+                  coefficients of the sampled audio files
+  encoded_transcripts - a python dictionary mapping the wav file names to the 
+                        encoded transcripts of those audio files.
+  batch_size - the size of the batch when loading
+  batch_no - the index of the batch
+  path - the path to the directory that contains the spectrogram images
+
+  Returns:
+  X_train - a numpy array containing the mfcc spectrograms of the sampled audio files
+  y_train - a numpy array containing the encoded transcripts of the sampled audio files
+            in the same order as they appear in X_train
+  """
+  X_train = []
+  y_train = []
+  audio_names = list(mfcc_features.keys())
+  i = batch_size*batch_no
+  j = batch_size*(batch_no + 1)
+  for audio in audio_names[i:j]:
+    specgram = image.imread(path+f'{audio}.png')
+    X_train.append(specgram)
+    y_train.append(encoded_transcripts[audio])
+  return np.array(X_train), np.array(y_train)
