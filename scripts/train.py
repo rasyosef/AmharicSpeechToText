@@ -4,7 +4,7 @@ from dataset_loader import load_audio_files, load_transcripts, load_spectrograms
 from resize_and_augment import resize_audios_mono, augment_audio, equalize_transcript_dimension
 from FeatureExtraction import FeatureExtraction
 from transcript_encoder import fit_label_encoder, encode_transcripts, decode_predicted
-from models import model_1, model_2
+from models import model_1, model_2, model_3
 
 import librosa   #for audio processing
 import librosa.display
@@ -18,7 +18,7 @@ import mlflow.keras
 import logging
 len(os.listdir('../data/train/wav/'))
 
-sample_rate = 22050
+sample_rate = 8000
 
 audio_files, maximum_length = load_audio_files('../data/train/wav/', sample_rate, True)
 logging.info('loaded audio files')
@@ -41,13 +41,15 @@ feature_extractor = FeatureExtraction()
 mfcc_features = feature_extractor.extract_features(audio_files, sample_rate)
 
 feature_extractor.save_mfcc_spectrograms(mfcc_features, sample_rate, '../data/train/mfcc_spectros/')
+print('Saved mfcc spectros')
 feature_extractor.save_mel_spectrograms(audio_files, sample_rate, '../data/train/mel_spectros/')
+print('saved mel spectros')
 
 char_encoder = fit_label_encoder(transcripts)
 transcripts_encoded = encode_transcripts(transcripts, char_encoder)
 enc_aug_transcripts = equalize_transcript_dimension(transcripts_encoded, 100)
-
-model = model_2(char_encoder)
+print('model summary')
+model = model_3(char_encoder)
 print(model.summary())
 
 import math
