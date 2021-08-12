@@ -52,15 +52,15 @@ def augment_audio(audios : dict, sample_rate : int) -> dict:
 #                           mode = 'constant')[:truncate_len])
 #   return np.array(new_y)
 
-def equalize_transcript_dimension(encoded_transcripts, truncate_len):
+def equalize_transcript_dimension(mfccs, encoded_transcripts, truncate_len):
   """
   Make all transcripts have equal number of characters by padding the the short
   ones with spaces
   """
-  max_len = max([len(encoded_transcripts[trans]) for trans in encoded_transcripts])
+  max_len = max([len(encoded_transcripts[trans]) for trans in mfccs])
   print("maximum number of characters in a transcript:", max_len)
   new_trans = {}
-  for trans in encoded_transcripts:
+  for trans in mfccs:
     new_trans[trans] = np.pad(encoded_transcripts[trans], 
                           (0, max_len-len(encoded_transcripts[trans])),
                           mode = 'constant')[:truncate_len]

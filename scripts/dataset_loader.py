@@ -22,14 +22,18 @@ def load_audio_files(path : str, sampling_rate : int, to_mono : bool) -> (dict, 
   audio_files = {}
   max_length = 0
   i = 0
-  for file in os.listdir(path):
-    audio, rate= librosa.load(path+file, sr=sampling_rate, mono = to_mono)
-    audio_files[file.split('.')[0]] = audio
-    max_length = max(max_length,len(audio))
+  files = os.listdir(path)
+  # import random
+  # random.shuffle(files)
+  for file in files:
+    audio, rate = librosa.load(path+file, sr=sampling_rate, mono = to_mono)
+    if len(audio)/rate <= 10:
+      audio_files[file.split('.')[0]] = audio
+      max_length = max(max_length,len(audio))
     i+=1
     if i%20 == 0:
       print('loaded',i,'audio files')
-    if i == 100:
+    if i == 12000:
       break
   return audio_files, max_length
 
