@@ -1,6 +1,7 @@
 import librosa
 import librosa.display
 import matplotlib.pyplot as plt
+import logging
 
 class FeatureExtraction:
     def extract_features(self, audios : dict, sample_rate : int) -> dict:
@@ -25,6 +26,7 @@ class FeatureExtraction:
         mfcc_features = {}
         for audio in audios:
             mfcc_features[audio] = librosa.feature.mfcc(audios[audio], sr=sample_rate)
+        logging.info('extracted mfcc features')
         return mfcc_features
 
     def save_mfcc_spectrograms(self, mfccs: dict, sample_rate: int, path: str) -> int:
@@ -63,6 +65,7 @@ class FeatureExtraction:
             except FileNotFoundError:
                 raise FileNotFoundError(f'The directory {path} does not exist')
             plt.close()
+        logging.info('saved mfcc spectrograms')
         return 0
 
     def save_mel_spectrograms(self, audios: dict, sample_rate: int, path: str) -> int:
@@ -103,4 +106,5 @@ class FeatureExtraction:
             except FileNotFoundError:
                 raise FileNotFoundError(f'The directory {path} does not exist')
             plt.close()
+        logging.info('saved mel spectrograms')
         return 0

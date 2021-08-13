@@ -1,5 +1,6 @@
 from sklearn.preprocessing import LabelEncoder
 import numpy as np
+import logging
 
 def fit_label_encoder(transcripts : dict) -> LabelEncoder:
   """
@@ -39,6 +40,8 @@ def encode_transcripts(transcripts : dict, encoder : LabelEncoder) -> dict:
   transcripts_encoded = {}
   for audio in transcripts:
     transcripts_encoded[audio] = encoder.transform(list(transcripts[audio]))
+  
+  logging.info('encoded transcripts using integers')
   return transcripts_encoded
 
 def decode_predicted(pred,encoder):
@@ -56,4 +59,5 @@ def decode_predicted(pred,encoder):
     if l[-1] != 222:
       newl.append(l[-1])
     dec.append(''.join(encoder.inverse_transform(newl)).strip())
+    logging.info('decoded predictions')
   return dec

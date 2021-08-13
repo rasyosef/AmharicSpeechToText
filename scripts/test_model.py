@@ -41,6 +41,9 @@ print("augmented shape", audio_files[demo_audio].shape)
 import pickle
 enc = open('../models/encoder.pkl', 'rb')
 char_encoder = pickle.load(enc)
+
+logging.info("Loaded Saved Encoder")
+
 transcripts_encoded = encode_transcripts(transcripts, char_encoder)
 enc_aug_transcripts = equalize_transcript_dimension(audio_files, transcripts_encoded, 200)
 
@@ -53,6 +56,7 @@ model = tf.keras.models.load_model('../models/new_model_v1_2000.h5',
                                         'LogMelgramLayer': LogMelgramLayer ,
                                         'CTCLayer': CTCLayer}
                                     )
+logging.info("Loaded Speech To Text Model")
 print(model.summary())
 
 def load_data(audio_files, encoded_transcripts):
@@ -72,6 +76,7 @@ mlflow.keras.autolog()
 import pickle
 
 predicted = model.predict([X_test,y_test])
+logging.info("Completed Prediction")
 predicted_trans = decode_predicted(predicted, char_encoder)
 real_trans = [''.join(char_encoder.inverse_transform(y)) for y in y_test]
 for i in range(len(y_test)):

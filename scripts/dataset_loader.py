@@ -2,6 +2,7 @@ import librosa   #for audio processing
 import numpy as np
 from matplotlib import image
 import os
+import logging
 
 def load_audio_files(path : str, sampling_rate : int, to_mono : bool) -> (dict, int):
 
@@ -35,6 +36,7 @@ def load_audio_files(path : str, sampling_rate : int, to_mono : bool) -> (dict, 
       print('loaded',i,'audio files')
     if i == 12000:
       break
+  logging.info('loaded {} audio files'.format(len(audio_files)))
   return audio_files, max_length
 
 def load_transcripts(filepath : str) -> dict:
@@ -57,6 +59,7 @@ def load_transcripts(filepath : str) -> dict:
       text, filename = line.split("</s>")
       text, filename = text.strip()[3:], filename.strip()[1:-1]
       transcripts[filename] = text
+    logging.info('loaded {} transcripts'.format(len(transcripts)))
     return transcripts
 
 

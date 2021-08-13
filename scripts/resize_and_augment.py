@@ -1,4 +1,7 @@
 import numpy as np
+import librosa
+import random
+import logging
 
 def resize_audios_mono(audios : dict, max_length : int) -> dict:
   """
@@ -17,6 +20,7 @@ def resize_audios_mono(audios : dict, max_length : int) -> dict:
     audios[name] = np.pad(audios[name], 
                           (0, max_length-len(audios[name])),
                           mode = 'constant')
+  logging.info('padded audio samples with silence')
   return audios
 
 
@@ -24,7 +28,7 @@ def augment_audio(audios : dict, sample_rate : int) -> dict:
   """
   Here we shift the wave by sample_rate/10 factor. This will move the wave to the 
   right by given factor along time axis. For achieving this I have used numpy’s 
-  roll function to generate time shifting.
+  roll function to generate time shifting, time stretching, and pitch shifting.
 
   Inputs: 
   audios - a dictionary mapping the wav file names to the sampled audio array
@@ -35,8 +39,12 @@ def augment_audio(audios : dict, sample_rate : int) -> dict:
           audio samples
   """
   for name in audios:
-    audios[name] = np.roll(audios[name], int(sample_rate/10))
+    audios[name] = np.roll(audios[name], [-sample_rate//10,0,sample_rate//10][random.randint(0,2)])
+    audios[name] = librosa.effects.time_stretch(audios[name], [0.9,1,1.1][random.randint(0,2)])
+    audios[name] = librosa.effects.pitch_shift(audios[name], sample_rate, n_steps=[-3,0,3][random.randint(0,2)])
+  logging.info('performed pitch shifting, time shifting and time stretching')
   return audios
+
 
 # def equalize_transcript_dimension(y, truncate_len):
 #   """
@@ -64,4 +72,5 @@ def equalize_transcript_dimension(mfccs, encoded_transcripts, truncate_len):
     new_trans[trans] = np.pad(encoded_transcripts[trans], 
                           (0, max_len-len(encoded_transcripts[trans])),
                           mode = 'constant')[:truncate_len]
+  logging.info('equalized transcript length')
   return new_trans
