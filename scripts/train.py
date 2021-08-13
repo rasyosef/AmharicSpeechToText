@@ -19,35 +19,35 @@ len(os.listdir('../../ALFFA_PUBLIC/ASR/AMHARIC/data/train/wav/'))
 
 sample_rate = 8000
 
-# audio_files, maximum_length = load_audio_files('../../ALFFA_PUBLIC/ASR/AMHARIC/data/train/wav/', sample_rate, True)
-# logging.info('loaded audio files')
+audio_files, maximum_length = load_audio_files('../../ALFFA_PUBLIC/ASR/AMHARIC/data/train/wav/', sample_rate, True)
+logging.info('loaded audio files')
 
-# print("The longest audio is", maximum_length/sample_rate, 'seconds long')
-# print("max length", maximum_length)
+print("The longest audio is", maximum_length/sample_rate, 'seconds long')
+print("max length", maximum_length)
 
-# demo_audio = list(audio_files.keys())[0]
+demo_audio = list(audio_files.keys())[0]
 
 transcripts = load_transcripts("../data/train/trsTrain.txt")
 logging.info('loaded transcripts')
 
-# audio_files = resize_audios_mono(audio_files, maximum_length)
-# print("resized shape", audio_files[demo_audio].shape)
+audio_files = resize_audios_mono(audio_files, maximum_length)
+print("resized shape", audio_files[demo_audio].shape)
 
-# audio_files = augment_audio(audio_files, sample_rate)
-# print("augmented shape", audio_files[demo_audio].shape)
+audio_files = augment_audio(audio_files, sample_rate)
+print("augmented shape", audio_files[demo_audio].shape)
 
-# feature_extractor = FeatureExtraction()
-# mfcc_features = feature_extractor.extract_features(audio_files, sample_rate)
+feature_extractor = FeatureExtraction()
+mfcc_features = feature_extractor.extract_features(audio_files, sample_rate)
 
-# feature_extractor.save_mfcc_spectrograms(mfcc_features, sample_rate, '../data/train/mfcc_spectros/')
-# print('Saved mfcc spectros')
-# feature_extractor.save_mel_spectrograms(audio_files, sample_rate, '../data/train/mel_spectros/')
-# print('saved mel spectros')
+feature_extractor.save_mfcc_spectrograms(mfcc_features, sample_rate, '../data/train/mfcc_spectros/')
+print('Saved mfcc spectros')
+feature_extractor.save_mel_spectrograms(audio_files, sample_rate, '../data/train/mel_spectros/')
+print('saved mel spectros')
 
-audios = [s[:-4] for s in os.listdir('../data/train/mel_spectros/')][:1050]
-mfcc_features = {}
-for audio in audios:
-    mfcc_features[audio] = 1
+# audios = [s[:-4] for s in os.listdir('../data/train/mel_spectros/')][:1050]
+# mfcc_features = {}
+# for audio in audios:
+#     mfcc_features[audio] = 1
 
 char_encoder = fit_label_encoder(transcripts)
 transcripts_encoded = encode_transcripts(transcripts, char_encoder)
